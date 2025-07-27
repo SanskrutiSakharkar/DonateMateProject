@@ -1,0 +1,34 @@
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-secondary);
+}
+
+.main-content {
+  flex: 1;
+  padding-top: 80px; /* Account for fixed header */
+}
+
+/* Custom toast styles */
+.Toastify__toast--success {
+  background: var(--success-color);
+}
+
+.Toastify__toast--error {
+  background: var(--error-color);
+}
+
+.Toastify__toast--warning {
+  background: var(--warm-orange);
+}
+
+.Toastify__toast {
+  font-family: var(--font-secondary);
+  border-radius: var(--radius-lg);
+  color: var(--warm-cream);
+}
+
+.Toastify__toast-body {
+  color: var(--warm-cream);
+}

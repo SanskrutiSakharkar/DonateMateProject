@@ -1,0 +1,68 @@
+:root {
+  /* Your Custom Color Palette */
+  --primary-color: #E59560;        /* Warm Orange */
+  --primary-light: #F0A976;
+  --primary-dark: #D4824A;
+  --secondary-color: #BACEC1;      /* Sage Green */
+  --accent-color: #1D3124;         /* Dark Forest Green */
+  --cream-color: #F6F4E8;          /* Cream */
+  
+  /* Semantic Colors */
+  --success-color: #4A7C59;
+  --error-color: #D2691E;
+  --warning-color: #E59560;
+  --info-color: #6B8E7A;
+  
+  /* Text colors */
+  --text-primary: #1D3124;
+  --text-secondary: #5A6B5D;
+  --text-muted: #8A9B8D;
+  --text-light: #F6F4E8;
+  
+  /* Background colors */
+  --bg-color: #F6F4E8;
+  --bg-white: #FFFFFF;
+  --bg-light: #BACEC1;
+  --bg-dark: #1D3124;
+  --bg-secondary: #E8F0EC;
+  
+  /* Border colors */
+  --border-color: #BACEC1;
+  --border-light: #D4E1D7;
+  --border-dark: #8A9B8D;
+  
+  /* Shadows */
+  --shadow: 0 2px 10px rgba(29, 49, 36, 0.1);
+  --shadow-hover: 0 8px 25px rgba(29, 49, 36, 0.15);
+  --shadow-large: 0 10px 40px rgba(29, 49, 36, 0.1);
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #E59560, #F0A976);
+  --gradient-secondary: linear-gradient(135deg, #BACEC1, #A8C4B5);
+  --gradient-hero: linear-gradient(135deg, #F6F4E8 0%, #BACEC1 50%, #E59560 100%);
+  
+  /* Typography - POPPINS FONT */
+  --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
+  --font-size-4xl: 36px;
+  --font-size-5xl: 48px;
+  
+  /* Spacing */
+  --container-padding: 20px;
+  --section-padding: 60px 0;
+  
+  /* Border radius */
+  --border-radius: 8px;
+  --border-radius-large: 16px;
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}

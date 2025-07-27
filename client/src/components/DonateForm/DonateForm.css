@@ -1,0 +1,332 @@
+.donate-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Progress Bar */
+.progress-bar {
+    position: relative;
+    margin-bottom: 2rem;
+    padding: 0 2rem;
+}
+
+.progress-steps {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    z-index: 2;
+}
+
+.progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--bg-color);
+    padding: 0.5rem;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: var(--bg-color);
+    transition: all var(--transition-normal);
+    font-family: var(--font-family);
+}
+
+.step-label {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.progress-step.active .step-number {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.progress-step.completed .step-number {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--text-light);
+}
+
+.progress-step.active .step-label,
+.progress-step.completed .step-label {
+    color: var(--primary-color);
+}
+
+.progress-fill {
+    position: absolute;
+    top: 20px;
+    left: 2rem;
+    right: 2rem;
+    height: 2px;
+    background: var(--primary-color);
+    transition: width var(--transition-normal);
+    z-index: 1;
+}
+
+.progress-fill::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--border-color);
+    z-index: -1;
+}
+
+/* Form Content */
+.form-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 0 0 var(--border-radius-large) var(--border-radius-large);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow);
+}
+
+.form-step {
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.step-title {
+    font-size: var(--font-size-2xl);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+/* Category Selection */
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.category-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background: var(--bg-color);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    font-size: var(--font-size-sm);
+    text-align: center;
+    font-family: var(--font-family);
+}
+
+.category-option:hover {
+    border-color: var(--primary-color);
+    background: rgba(229, 149, 96, 0.05);
+}
+
+.category-option.selected {
+    border-color: var(--primary-color);
+    background: rgba(229, 149, 96, 0.1);
+    color: var(--primary-color);
+}
+
+.category-icon {
+    font-size: 1.5rem;
+}
+
+.category-name {
+    font-weight: 500;
+}
+
+/* Amount Selection */
+.amount-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.amount-option {
+    padding: 0.75rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background: var(--bg-color);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    font-weight: 500;
+    text-align: center;
+    color: var(--text-primary);
+    font-family: var(--font-family);
+}
+
+.amount-option:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.amount-option.selected {
+    border-color: var(--primary-color);
+    background: var(--primary-color);
+    color: var(--text-light);
+}
+
+.amount-input {
+    margin-top: 0.5rem;
+}
+
+/* Review Section */
+.donation-summary {
+    background: var(--bg-light);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.summary-section {
+    margin-bottom: 1.5rem;
+}
+
+.summary-section:last-child {
+    margin-bottom: 0;
+}
+
+.summary-section h4 {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 0.5rem;
+    gap: 1rem;
+}
+
+.summary-item .label {
+    font-weight: 500;
+    color: var(--text-secondary);
+    min-width: 80px;
+}
+
+.summary-item .value {
+    color: var(--text-primary);
+    text-align: right;
+    word-break: break-word;
+}
+
+.amount-highlight {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.payment-info {
+    margin-bottom: 1.5rem;
+}
+
+.info-box {
+    background: rgba(229, 149, 96, 0.1);
+    border: 1px solid rgba(229, 149, 96, 0.3);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    text-align: center;
+}
+
+.info-box h4 {
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+    font-size: var(--font-size-base);
+}
+
+.info-box p {
+    margin: 0;
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+.loading-text {
+    color: var(--warning-color);
+    font-weight: 500;
+}
+
+/* Step Actions */
+.step-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 2rem;
+}
+
+.step-actions .btn {
+    flex: 1;
+}
+
+.step-actions .btn:first-child:last-child {
+    margin-left: auto;
+    flex: none;
+    min-width: 200px;
+}
+
+.donate-now-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-icon {
+    margin-left: 0.5rem;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+    .progress-bar {
+        padding: 0 1rem;
+    }
+
+    .form-content {
+        padding: 1.5rem;
+    }
+
+    .step-title {
+        font-size: var(--font-size-xl);
+    }
+
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .amount-options {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .summary-item {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .summary-item .value {
+        text-align: left;
+    }
+
+    .step-actions {
+        flex-direction: column;
+    }
+}

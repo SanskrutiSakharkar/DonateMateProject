@@ -1,0 +1,393 @@
+.ngo-page {
+    min-height: 100vh;
+    padding-bottom: 2rem;
+}
+
+.page-header {
+    background: var(--gradient-primary);
+    color: white;
+    padding: 3rem 0;
+    text-align: center;
+}
+
+.page-title {
+    font-size: var(--font-size-4xl);
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.page-description {
+    font-size: var(--font-size-lg);
+    max-width: 600px;
+    margin: 0 auto;
+    opacity: 0.9;
+    line-height: 1.7;
+}
+
+/* Filters Section */
+.filters-section {
+    background: var(--bg-color);
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 2rem;
+    position: sticky;
+    top: 80px;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(29, 49, 36, 0.1);
+}
+
+.search-bar {
+    position: relative;
+    max-width: 400px;
+    margin: 0 auto 2rem;
+}
+
+.search-input {
+    width: 100%;
+    padding: 1rem 3rem 1rem 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 25px;
+    font-size: var(--font-size-base);
+    transition: border-color var(--transition-normal);
+    background: white;
+    font-family: var(--font-family);
+}
+
+.search-input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+.search-icon {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+}
+
+.category-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.filter-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: 2px solid var(--border-color);
+    background: white;
+    border-radius: 25px;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    white-space: nowrap;
+    font-family: var(--font-family);
+}
+
+.filter-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.filter-btn.active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.filter-icon {
+    font-size: 1rem;
+}
+
+/* Results Section */
+.results-section {
+    padding: 2rem 0;
+}
+
+.results-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.results-header h2 {
+    font-size: var(--font-size-2xl);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.category-label {
+    color: var(--primary-color);
+    font-weight: 400;
+}
+
+/* NGO Cards Grid */
+.ngos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--container-padding);
+}
+
+.ngo-card {
+    background: white;
+    border-radius: var(--border-radius-large);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    transition: all var(--transition-normal);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: auto;
+    min-height: 400px;
+    border: 1px solid var(--border-light);
+    position: relative;
+    overflow: hidden;
+}
+
+.ngo-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-4px);
+}
+
+/* NGO Card Header */
+.ngo-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.ngo-title-section {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.ngo-title {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    flex: 1;
+    min-width: 200px;
+}
+
+.verified-badge {
+    background: var(--success-color);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.ngo-category-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    text-transform: capitalize;
+    align-self: flex-start;
+    white-space: nowrap;
+}
+
+/* NGO Card Content */
+.ngo-description {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.ngo-website {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color var(--transition-normal);
+    margin: 0.5rem 0;
+}
+
+.ngo-website:hover {
+    color: var(--primary-dark);
+}
+
+/* NGO Stats */
+.ngo-stats {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 0;
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+    margin: 0.5rem 0;
+}
+
+.stat {
+    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.stat-value {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: var(--font-size-base);
+}
+
+.stat-label {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* NGO Actions */
+.ngo-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: auto;
+    padding-top: 1rem;
+}
+
+.ngo-actions .btn {
+    flex: 1;
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.ngo-actions .btn-small {
+    flex: 0.6;
+}
+
+/* No Results & Error States */
+.no-results,
+.error-message {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: var(--text-secondary);
+    background: white;
+    border-radius: var(--border-radius-large);
+    box-shadow: var(--shadow);
+    margin: 2rem auto;
+    max-width: 500px;
+}
+
+.no-results h3,
+.error-message h2 {
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    font-size: var(--font-size-xl);
+}
+
+.no-results p,
+.error-message p {
+    margin-bottom: 2rem;
+    line-height: 1.7;
+}
+
+/* Mobile Styles */
+@media (max-width: 1024px) {
+    .ngos-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-header {
+        padding: 2rem 0;
+    }
+
+    .page-title {
+        font-size: var(--font-size-3xl);
+    }
+
+    .filters-section {
+        position: static;
+        padding: 1.5rem 0;
+    }
+
+    .category-filters {
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        scrollbar-width: thin;
+    }
+
+    .category-filters::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    .category-filters::-webkit-scrollbar-thumb {
+        background: var(--primary-color);
+        border-radius: 2px;
+    }
+
+    .filter-btn {
+        flex-shrink: 0;
+        min-width: fit-content;
+    }
+
+    .ngos-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 0 1rem;
+    }
+
+    .ngo-card {
+        padding: 1.5rem;
+        min-height: 350px;
+    }
+
+    .ngo-title-section {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .ngo-stats {
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: left;
+    }
+
+    .stat {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+    }
+
+    .ngo-actions {
+        flex-direction: column;
+    }
+
+    .ngo-actions .btn {
+        flex: none;
+    }
+
+    .results-header h2 {
+        font-size: var(--font-size-xl);
+        flex-direction: column;
+        align-items: center;
+    }
+}
