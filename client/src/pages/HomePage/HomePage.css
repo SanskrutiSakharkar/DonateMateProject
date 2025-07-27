@@ -262,6 +262,7 @@
     box-shadow: 0 12px 40px rgba(29, 49, 36, 0.15);
 }
 
+/* FIXED CSS BLOCK - Properly closed braces */
 .ngo-header {
     display: flex;
     flex-direction: column;
