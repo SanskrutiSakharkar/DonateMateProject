@@ -1,0 +1,25 @@
+{
+  "name": "donate-mate-app",
+  "version": "1.0.0",
+  "description": "DonateMate - Connecting hearts with verified NGO partners",
+  "main": "server/server.js",
+  "scripts": {
+    "build": "cd client && npm install && npm run build",
+    "start": "cd server && npm start",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm start",
+    "install-deps": "cd server && npm install && cd ../client && npm install"
+  },
+  "engines": {
+    "node": "18.x",
+    "npm": ">=8.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  },
+  "keywords": ["donation", "ngo", "charity", "react", "nodejs"],
+  "author": "Your Name",
+  "license": "MIT"
+}
+
