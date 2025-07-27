@@ -3,65 +3,44 @@ const { pool } = require('../config/database');
 class Donation {
     static async create(donationData) {
         try {
-            // Destructure and provide default values
-            const {
-                name,
-                email,
-                phone = null,
-                amount,
-                category,
-                message = null,
-                payment_id = null,
-                razorpay_order_id = null,
-                status = 'pending'
-            } = donationData;
+            console.log('Creating donation with data:', donationData);
+
+            // Extract and sanitize data with explicit null handling
+            const name = donationData.name ? String(donationData.name).trim() : null;
+            const email = donationData.email ? String(donationData.email).trim() : null;
+            const phone = donationData.phone ? String(donationData.phone).trim() : null;
+            const amount = donationData.amount ? parseFloat(donationData.amount) : null;
+            const category = donationData.category ? String(donationData.category).trim() : null;
+            const message = donationData.message ? String(donationData.message).trim() : null;
+            const payment_id = donationData.payment_id ? String(donationData.payment_id) : null;
+            const razorpay_order_id = donationData.razorpay_order_id ? String(donationData.razorpay_order_id) : null;
+            const status = donationData.status ? String(donationData.status) : 'pending';
 
             // Validate required fields
-            if (!name || !email || !amount || !category) {
-                throw new Error('Missing required fields: name, email, amount, category');
-            }
+            if (!name) throw new Error('Name is required');
+            if (!email) throw new Error('Email is required');
+            if (!amount || isNaN(amount) || amount <= 0) throw new Error('Valid amount is required');
+            if (!category) throw new Error('Category is required');
 
-            // Ensure amount is a valid number
-            const validAmount = parseFloat(amount);
-            if (isNaN(validAmount) || validAmount <= 0) {
-                throw new Error('Invalid amount provided');
-            }
-
-            // Clean and validate data
-            const cleanData = {
-                name: String(name).trim(),
-                email: String(email).trim(),
-                phone: phone ? String(phone).trim() : null,
-                amount: validAmount,
-                category: String(category),
-                message: message ? String(message).trim() : null,
-                payment_id: payment_id || null,
-                razorpay_order_id: razorpay_order_id || null,
-                status: status || 'pending'
-            };
-
-            console.log('Creating donation with data:', cleanData); // Debug log
-
+            // Insert with explicit values
             const [result] = await pool.execute(
                 `INSERT INTO donations 
                  (name, email, phone, amount, category, message, payment_id, razorpay_order_id, status) 
                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-                [
-                    cleanData.name,
-                    cleanData.email,
-                    cleanData.phone,
-                    cleanData.amount,
-                    cleanData.category,
-                    cleanData.message,
-                    cleanData.payment_id,
-                    cleanData.razorpay_order_id,
-                    cleanData.status
-                ]
+                [name, email, phone, amount, category, message, payment_id, razorpay_order_id, status]
             );
             
             return { 
                 id: result.insertId, 
-                ...cleanData,
+                name,
+                email,
+                phone,
+                amount,
+                category,
+                message,
+                payment_id,
+                razorpay_order_id,
+                status,
                 created_at: new Date()
             };
         } catch (error) {
@@ -83,7 +62,7 @@ class Donation {
         try {
             const [rows] = await pool.execute(
                 'SELECT * FROM donations ORDER BY created_at DESC LIMIT ? OFFSET ?',
-                [limit, offset]
+                [parseInt(limit), parseInt(offset)]
             );
             return rows;
         } catch (error) {
@@ -108,7 +87,7 @@ class Donation {
             const [rows] = await pool.execute(`
                 SELECT 
                     COUNT(*) as total_donations,
-                    SUM(CASE WHEN status = 'completed' THEN amount ELSE 0 END) as total_amount,
+                    COALESCE(SUM(CASE WHEN status = 'completed' THEN amount ELSE 0 END), 0) as total_amount,
                     COUNT(CASE WHEN status = 'completed' THEN 1 END) as completed_donations
                 FROM donations
             `);

@@ -22,10 +22,7 @@ class NGO {
 
     static async findById(id) {
         try {
-            const [rows] = await pool.execute(
-                'SELECT * FROM ngo_partners WHERE id = ? AND verified = 1',
-                [id]
-            );
+            const [rows] = await pool.execute('SELECT * FROM ngo_partners WHERE id = ?', [id]);
             return rows[0] || null;
         } catch (error) {
             throw new Error(`Failed to find NGO: ${error.message}`);
@@ -44,95 +41,13 @@ class NGO {
         }
     }
 
-    static async create(ngoData) {
-        try {
-            const { 
-                name, 
-                logo_url, 
-                category, 
-                description, 
-                website, 
-                verified = 1, 
-                rating = 4.5, 
-                projects = 0, 
-                beneficiaries = '0' 
-            } = ngoData;
-            
-            const [result] = await pool.execute(
-                'INSERT INTO ngo_partners (name, logo_url, category, description, website, verified, rating, projects, beneficiaries) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                [name, logo_url, category, description, website, verified, rating, projects, beneficiaries]
-            );
-            
-            return { id: result.insertId, ...ngoData };
-        } catch (error) {
-            throw new Error(`Failed to create NGO: ${error.message}`);
-        }
-    }
-
-    static async update(id, ngoData) {
-        try {
-            const { 
-                name, 
-                logo_url, 
-                category, 
-                description, 
-                website, 
-                verified, 
-                rating, 
-                projects, 
-                beneficiaries 
-            } = ngoData;
-            
-            const [result] = await pool.execute(
-                'UPDATE ngo_partners SET name = ?, logo_url = ?, category = ?, description = ?, website = ?, verified = ?, rating = ?, projects = ?, beneficiaries = ? WHERE id = ?',
-                [name, logo_url, category, description, website, verified, rating, projects, beneficiaries, id]
-            );
-            
-            if (result.affectedRows === 0) {
-                throw new Error('NGO not found');
-            }
-            
-            return { id, ...ngoData };
-        } catch (error) {
-            throw new Error(`Failed to update NGO: ${error.message}`);
-        }
-    }
-
-    static async delete(id) {
-        try {
-            const [result] = await pool.execute(
-                'DELETE FROM ngo_partners WHERE id = ?',
-                [id]
-            );
-            
-            return result.affectedRows > 0;
-        } catch (error) {
-            throw new Error(`Failed to delete NGO: ${error.message}`);
-        }
-    }
-
-    static async updateVerificationStatus(id, verified) {
-        try {
-            const [result] = await pool.execute(
-                'UPDATE ngo_partners SET verified = ? WHERE id = ?',
-                [verified, id]
-            );
-            
-            return result.affectedRows > 0;
-        } catch (error) {
-            throw new Error(`Failed to update NGO verification status: ${error.message}`);
-        }
-    }
-
     static async getStats() {
         try {
             const [rows] = await pool.execute(`
                 SELECT 
                     COUNT(*) as total_ngos,
                     COUNT(CASE WHEN verified = 1 THEN 1 END) as verified_ngos,
-                    AVG(rating) as average_rating,
-                    SUM(projects) as total_projects,
-                    COUNT(DISTINCT category) as total_categories
+                    AVG(rating) as average_rating
                 FROM ngo_partners
             `);
             return rows[0];

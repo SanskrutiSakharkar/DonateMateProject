@@ -5,9 +5,7 @@ class DonationController {
         try {
             console.log('=== DONATION CREATION START ===');
             console.log('Request body:', JSON.stringify(req.body, null, 2));
-            console.log('Request headers:', req.headers);
 
-            // Extract data from request body
             const {
                 name,
                 email,
@@ -19,19 +17,6 @@ class DonationController {
                 razorpay_order_id,
                 status
             } = req.body;
-
-            // Log individual fields
-            console.log('Individual fields:', {
-                name: `"${name}" (type: ${typeof name})`,
-                email: `"${email}" (type: ${typeof email})`,
-                phone: `"${phone}" (type: ${typeof phone})`,
-                amount: `"${amount}" (type: ${typeof amount})`,
-                category: `"${category}" (type: ${typeof category})`,
-                message: `"${message}" (type: ${typeof message})`,
-                payment_id: `"${payment_id}" (type: ${typeof payment_id})`,
-                razorpay_order_id: `"${razorpay_order_id}" (type: ${typeof razorpay_order_id})`,
-                status: `"${status}" (type: ${typeof status})`
-            });
 
             // Basic validation
             if (!name || typeof name !== 'string' || name.trim().length === 0) {
@@ -96,7 +81,6 @@ class DonationController {
         } catch (error) {
             console.error('=== DONATION CREATION ERROR ===');
             console.error('Error details:', error);
-            console.error('Error stack:', error.stack);
             
             res.status(500).json({
                 success: false,

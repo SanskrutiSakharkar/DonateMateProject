@@ -1,22 +1,20 @@
 const express = require('express');
 const DonationController = require('../controllers/donationController');
-const { validateDonation } = require('../middleware/validation');
-
 const router = express.Router();
 
-// Get all donations
+// GET /api/donations
 router.get('/', DonationController.getDonations);
 
-// Get donation statistics
+// POST /api/donations
+router.post('/', DonationController.createDonation);
+
+// GET /api/donations/stats/summary
 router.get('/stats/summary', DonationController.getStats);
 
-// Get donation by ID
+// GET /api/donations/:id
 router.get('/:id', DonationController.getDonationById);
 
-// Create new donation
-router.post('/', validateDonation, DonationController.createDonation);
-
-// Update donation status
-router.patch('/:id/status', DonationController.updateDonationStatus);
+// PUT /api/donations/:id/status
+router.put('/:id/status', DonationController.updateDonationStatus);
 
 module.exports = router;

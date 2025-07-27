@@ -1,9 +1,8 @@
 const Razorpay = require('razorpay');
-const crypto = require('crypto');
 
 const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET
+    key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
 class PaymentController {
@@ -11,24 +10,27 @@ class PaymentController {
         try {
             const { amount, currency = 'INR' } = req.body;
 
-            const options = {
-                amount: amount, // Amount in paise
-                currency: currency,
-                receipt: `order_${Date.now()}`,
-                payment_capture: 1
-            };
+            if (!amount || amount < 100) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Amount must be at least ₹1'
+                });
+            }
 
-            const order = await razorpay.orders.create(options);
+            const order = await razorpay.orders.create({
+                amount: Math.round(amount),
+                currency,
+                receipt: `receipt_${Date.now()}`,
+            });
 
             res.status(200).json({
                 success: true,
                 order_id: order.id,
                 amount: order.amount,
-                currency: order.currency,
                 key_id: process.env.RAZORPAY_KEY_ID
             });
         } catch (error) {
-            console.error('Payment order creation error:', error);
+            console.error('Create order error:', error);
             res.status(500).json({
                 success: false,
                 message: 'Failed to create payment order',
@@ -41,13 +43,12 @@ class PaymentController {
         try {
             const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
-            const sign = razorpay_order_id + '|' + razorpay_payment_id;
-            const expectedSign = crypto
-                .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
-                .update(sign.toString())
-                .digest('hex');
+            const crypto = require('crypto');
+            const hmac = crypto.createHmac('sha256', process.env.RAZORPAY_KEY_SECRET);
+            hmac.update(razorpay_order_id + '|' + razorpay_payment_id);
+            const generated_signature = hmac.digest('hex');
 
-            if (razorpay_signature === expectedSign) {
+            if (generated_signature === razorpay_signature) {
                 res.status(200).json({
                     success: true,
                     message: 'Payment verified successfully'
@@ -55,14 +56,14 @@ class PaymentController {
             } else {
                 res.status(400).json({
                     success: false,
-                    message: 'Invalid payment signature'
+                    message: 'Payment verification failed'
                 });
             }
         } catch (error) {
-            console.error('Payment verification error:', error);
+            console.error('Verify payment error:', error);
             res.status(500).json({
                 success: false,
-                message: 'Payment verification failed',
+                message: 'Failed to verify payment',
                 error: error.message
             });
         }
