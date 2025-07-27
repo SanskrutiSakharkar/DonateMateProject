@@ -70,18 +70,6 @@ class Donation {
         }
     }
 
-    static async updateStatus(id, status) {
-        try {
-            const [result] = await pool.execute(
-                'UPDATE donations SET status = ? WHERE id = ?',
-                [status, id]
-            );
-            return result.affectedRows > 0;
-        } catch (error) {
-            throw new Error(`Failed to update donation status: ${error.message}`);
-        }
-    }
-
     static async getTotalStats() {
         try {
             const [rows] = await pool.execute(`
