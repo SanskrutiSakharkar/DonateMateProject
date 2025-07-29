@@ -1,14 +1,12 @@
-
-// Add this at the very beginning of server.js, before any other requires
+// Load env variables from .env file
 require('dotenv').config({ path: __dirname + '/.env' });
 
-// Add debug logging to verify env vars are loaded
+// Debug logging for env check
 console.log('Environment Variables Check:');
 console.log('MYSQL_HOST:', process.env.MYSQL_HOST);
 console.log('MYSQL_USER:', process.env.MYSQL_USER);
 console.log('MYSQL_PASSWORD:', process.env.MYSQL_PASSWORD ? '***set***' : 'NOT SET');
 console.log('MYSQL_DATABASE:', process.env.MYSQL_DATABASE);
-
 
 const express = require('express');
 const cors = require('cors');
@@ -16,18 +14,15 @@ const path = require('path');
 const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
-require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Import database configuration
+// Import database connection
 const { pool, testConnection } = require('./config/database');
-
-// Test database connection on startup
 testConnection();
 
-// Security middleware
+// Middleware
 app.use(helmet({
     contentSecurityPolicy: {
         directives: {
@@ -41,23 +36,12 @@ app.use(helmet({
     }
 }));
 
-// Compression middleware
 app.use(compression());
-
-// Logging middleware
-if (process.env.NODE_ENV === 'development') {
-    app.use(morgan('dev'));
-} else {
-    app.use(morgan('combined'));
-}
-
-// Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// CORS configuration
 app.use(cors({
-    origin: process.env.NODE_ENV === 'production' 
+    origin: process.env.NODE_ENV === 'production'
         ? [
             process.env.FRONTEND_URL,
             'https://*.up.railway.app',
@@ -69,118 +53,76 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
-// Import routes
+if (process.env.NODE_ENV === 'development') {
+    app.use(morgan('dev'));
+} else {
+    app.use(morgan('combined'));
+}
+
+// Routes
 const donationRoutes = require('./routes/donations');
 const paymentRoutes = require('./routes/payments');
 const ngoRoutes = require('./routes/ngos');
 
-// API Routes
 app.use('/api/donations', donationRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/ngos', ngoRoutes);
 
-// Health check endpoint
+// Health Check
 app.get('/api/health', (req, res) => {
-    res.json({ 
-        status: 'OK', 
+    res.json({
+        status: 'OK',
         message: 'DonateMate API is running',
         timestamp: new Date().toISOString(),
-        environment: process.env.NODE_ENV || 'development',
-        version: '1.0.0'
+        environment: process.env.NODE_ENV || 'development'
     });
 });
 
-// Database connection test endpoint
+// DB Test
 app.get('/api/test-db', async (req, res) => {
     try {
         const [rows] = await pool.execute('SELECT 1 as test, NOW() as timestamp');
-        res.json({ 
-            success: true, 
-            message: 'Database connection successful',
-            data: rows[0]
-        });
-    } catch (error) {
-        console.error('Database test error:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Database connection failed',
-            error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
-        });
+        res.json({ success: true, data: rows[0] });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Database error', error: err.message });
     }
 });
 
-// API documentation endpoint
+// API Docs
 app.get('/api', (req, res) => {
     res.json({
         name: 'DonateMate API',
         version: '1.0.0',
-        description: 'Backend API for DonateMate donation platform',
         endpoints: {
             health: '/api/health',
             donations: '/api/donations',
             ngos: '/api/ngos',
             payments: '/api/payments'
-        },
-        environment: process.env.NODE_ENV || 'development'
+        }
     });
 });
 
-// Serve React build files in production
+
+// ✅ Serve React frontend in production
 if (process.env.NODE_ENV === 'production') {
-    // Serve static files from React build
-    app.use(express.static(path.join(__dirname, '../client/build')));
-    
-    // Serve images and other assets
-    app.use('/images', express.static(path.join(__dirname, '../client/public/images')));
-    
-    // Handle React routing - send all non-API requests to React app
+    const buildPath = path.join(__dirname, 'client/build');
+    app.use(express.static(buildPath));
+
     app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, '../client/build/index.html'));
+        res.sendFile(path.join(buildPath, 'index.html'));
     });
 } else {
-    // Development mode message
+    // Dev mode landing
     app.get('/', (req, res) => {
         res.json({
-            message: 'DonateMate API Server',
-            mode: 'development',
-            frontend: 'Run React app separately on port 3000',
-            api_docs: '/api',
-            health_check: '/api/health'
+            message: 'DonateMate API Server (development)',
+            frontend: 'Run React separately at http://localhost:3000',
+            health: '/api/health'
         });
     });
 }
 
-// Global error handling middleware
-app.use((err, req, res, next) => {
-    console.error('Global error handler:', err.stack);
-    
-    // Handle specific error types
-    if (err.name === 'ValidationError') {
-        return res.status(400).json({
-            success: false,
-            message: 'Validation error',
-            error: err.message
-        });
-    }
-    
-    if (err.code === 'ECONNREFUSED') {
-        return res.status(503).json({
-            success: false,
-            message: 'Database connection refused',
-            error: 'Service temporarily unavailable'
-        });
-    }
-    
-    // Default error response
-    res.status(500).json({
-        success: false,
-        message: 'Something went wrong!',
-        error: process.env.NODE_ENV === 'production' ? 'Internal server error' : err.message,
-        ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
-    });
-});
-
-// Handle 404 for API routes
+// 404 Handler for unknown API routes
 app.use('/api/*', (req, res) => {
     res.status(404).json({
         success: false,
@@ -194,62 +136,39 @@ app.use('/api/*', (req, res) => {
     });
 });
 
-// Start server
+// Global Error Handler
+app.use((err, req, res, next) => {
+    console.error('Global error:', err.stack);
+    res.status(500).json({
+        success: false,
+        message: 'Internal Server Error',
+        error: process.env.NODE_ENV === 'development' ? err.message : 'Unexpected error'
+    });
+});
+
+// Start Server
 const server = app.listen(PORT, () => {
-    console.log(` DonateMate Server running on port ${PORT}`);
-    console.log(` Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(` Server URL: http://localhost:${PORT}`);
-    console.log(` API Documentation: http://localhost:${PORT}/api`);
-    console.log(` Health Check: http://localhost:${PORT}/api/health`);
-    
+    console.log(`DonateMate Server running on port ${PORT}`);
+    console.log(`Environment: ${process.env.NODE_ENV}`);
+    console.log(`API: http://localhost:${PORT}/api`);
+    console.log(`Health: http://localhost:${PORT}/api/health`);
     if (process.env.NODE_ENV === 'production') {
-        console.log(' Serving React build files');
-        console.log(' Production mode active');
-        console.log(' Security middleware enabled');
-    } else {
-        console.log(' Development mode - React app should run separately');
-        console.log(' Debug logging enabled');
+        console.log('Serving React frontend from client/build');
     }
 });
 
-// Graceful shutdown handling
-const gracefulShutdown = async (signal) => {
-    console.log(`\n Received ${signal}. Shutting down gracefully...`);
-    
+// Graceful shutdown
+const shutdown = async (signal) => {
+    console.log(`Received ${signal}. Shutting down...`);
     server.close(async () => {
         console.log('HTTP server closed');
-        
-        try {
-            await pool.end();
-            console.log('Database connections closed');
-            process.exit(0);
-        } catch (error) {
-            console.error('Error during shutdown:', error);
-            process.exit(1);
-        }
+        await pool.end();
+        console.log('Database pool closed');
+        process.exit(0);
     });
-    
-    // Force close after 10 seconds
-    setTimeout(() => {
-        console.error('Forcing shutdown after timeout');
-        process.exit(1);
-    }, 10000);
 };
 
-// Handle shutdown signals
-process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
-process.on('SIGINT', () => gracefulShutdown('SIGINT'));
-
-// Handle uncaught exceptions
-process.on('uncaughtException', (error) => {
-    console.error('Uncaught Exception:', error);
-    process.exit(1);
-});
-
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (reason, promise) => {
-    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-    process.exit(1);
-});
+process.on('SIGINT', () => shutdown('SIGINT'));
+process.on('SIGTERM', () => shutdown('SIGTERM'));
 
 module.exports = app;

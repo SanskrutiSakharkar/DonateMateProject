@@ -5,6 +5,7 @@
   "main": "server/server.js",
   "scripts": {
     "build": "cd client && npm install && npm run build",
+    "postinstall": "cd client && npm install && npm run build && mkdir -p ../server/client && cp -r build ../server/client/build",
     "start": "cd server && npm start",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "cd server && npm run dev",
@@ -21,10 +22,4 @@
   "keywords": ["donation", "ngo", "charity", "react", "nodejs"],
   "author": "Your Name",
   "license": "MIT"
-  
 }
-
-
-
-
-
