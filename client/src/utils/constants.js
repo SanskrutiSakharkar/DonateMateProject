@@ -140,43 +140,50 @@ export const ANIMATION_VARIANTS = {
 
 // Donation Categories
 export const DONATION_CATEGORIES = [
-    {
-        id: 'education',
-        name: 'Education',
-        description: 'Support educational initiatives and literacy programs',
-        color: '#E59560'
-    },
-    {
-        id: 'healthcare',
-        name: 'Healthcare',
-        description: 'Provide medical aid and healthcare services',
-        color: '#1D3124'
-    },
-    {
-        id: 'environment',
-        name: 'Environment',
-        description: 'Protect our planet and combat climate change',
-        color: '#BACEC1'
-    },
-    {
-        id: 'emergency',
-        name: 'Emergency Relief',
-        description: 'Disaster relief and emergency assistance',
-        color: '#E59560'
-    },
-    {
-        id: 'poverty',
-        name: 'Poverty Alleviation',
-        description: 'Help communities break the cycle of poverty',
-        color: '#1D3124'
-    },
-    {
-        id: 'animals',
-        name: 'Animal Welfare',
-        description: 'Protect and care for animals in need',
-        color: '#BACEC1'
-    }
+  {
+    id: 'education',
+    name: 'Education',
+    description: 'Support educational initiatives and literacy programs',
+    color: '#E59560',
+    image: '/images/categories/education.jpg'
+  },
+  {
+    id: 'healthcare',
+    name: 'Healthcare',
+    description: 'Provide medical aid and healthcare services',
+    color: '#1D3124',
+    image: '/images/categories/healthcare.jpg'
+  },
+  {
+    id: 'environment',
+    name: 'Environment',
+    description: 'Protect our planet and combat climate change',
+    color: '#BACEC1',
+    image: '/images/categories/environment.jpg'
+  },
+  {
+    id: 'emergency',
+    name: 'Emergency Relief',
+    description: 'Disaster relief and emergency assistance',
+    color: '#E59560',
+    image: '/images/categories/emergency.jpg'
+  },
+  {
+    id: 'poverty',
+    name: 'Poverty Alleviation',
+    description: 'Help communities break the cycle of poverty',
+    color: '#1D3124',
+    image: '/images/categories/poverty.jpg'
+  },
+  {
+    id: 'animals',
+    name: 'Animal Welfare',
+    description: 'Protect and care for animals in need',
+    color: '#BACEC1',
+    image: '/images/categories/animals.jpg'
+  }
 ];
+
 
 // Suggested Donation Amounts
 export const SUGGESTED_AMOUNTS = [100, 500, 1000, 2500, 5000, 10000];

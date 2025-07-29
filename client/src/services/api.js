@@ -1,54 +1,59 @@
+
+
 export const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
-const apiService = {
-    getNGOs: async (category = null) => {
-        try {
-            // ✅ Clean and normalize the category
-            const cleanedCategory = category ? category.trim().toLowerCase() : null;
+export const apiService = {
+  getNGOs: async (category = null) => {
+    try {
+      // ✅ Clean the category
+      const cleanedCategory = category ? category.trim().toLowerCase() : null;
 
-            const url = cleanedCategory && cleanedCategory !== 'all'
-                ? `${API_BASE_URL}/ngos/category/${cleanedCategory}` // ✅ use RESTful route
-                : `${API_BASE_URL}/ngos`;
+      // ✅ Build the correct endpoint
+      const url = cleanedCategory && cleanedCategory !== 'all'
+        ? `${API_BASE_URL}/ngos/category/${cleanedCategory}`
+        : `${API_BASE_URL}/ngos`;
 
-            const response = await fetch(url);
+      // ✅ Debug log to confirm actual URL used
+      console.log("🔍 Fetching NGOs from:", url);
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+      const response = await fetch(url);
 
-            const data = await response.json();
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
 
-            if (data.success && Array.isArray(data.data)) {
-                return { success: true, data: data.data };
-            } else if (Array.isArray(data)) {
-                return { success: true, data: data };
-            } else {
-                console.warn('API returned non-array data:', data);
-                return { success: true, data: [] };
-            }
+      const data = await response.json();
 
-        } catch (error) {
-            console.error('API fetch failed:', error);
+      if (data.success && Array.isArray(data.data)) {
+        return { success: true, data: data.data };
+      } else {
+        console.warn("❗Unexpected API format:", data);
+        return { success: false, data: [] };
+      }
 
-            // Return fallback NGO data
-            const fallbackNGOs = [
-                {
-                    id: 1,
-                    name: 'Teach for India',
-                    category: 'education',
-                    description: 'Eliminating educational inequity by expanding educational opportunity.',
-                    website: 'https://teachforindia.org',
-                    verified: true,
-                    rating: 4.8,
-                    projects: 45,
-                    beneficiaries: '50,000+'
-                },
-                // You can add more fallback NGOs here
-            ];
+    } catch (error) {
+      console.error("❌ API fetch failed:", error);
 
-            return { success: true, data: fallbackNGOs };
-        }
+      // 🔒 In production, we should not show mock data
+      // return fallback only in development if needed
+      if (process.env.NODE_ENV === "development") {
+        const fallbackNGOs = [
+          {
+            id: 1,
+            name: 'Teach for India',
+            category: 'education',
+            description: 'Eliminating educational inequity by expanding educational opportunity.',
+            website: 'https://teachforindia.org',
+            verified: true,
+            rating: 4.8,
+            projects: 45,
+            beneficiaries: '50,000+'
+          }
+        ];
+        return { success: true, data: fallbackNGOs };
+      }
+
+      return { success: false, data: [] };
     }
+  }
 };
-
-export { apiService };
