@@ -1,7 +1,5 @@
-// Load env variables from .env file
 require('dotenv').config({ path: __dirname + '/.env' });
 
-// Debug logging for env check
 console.log('Environment Variables Check:');
 console.log('MYSQL_HOST:', process.env.MYSQL_HOST);
 console.log('MYSQL_USER:', process.env.MYSQL_USER);
@@ -18,11 +16,9 @@ const morgan = require('morgan');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Import database connection
 const { pool, testConnection } = require('./config/database');
 testConnection();
 
-// Middleware
 app.use(helmet({
     contentSecurityPolicy: {
         directives: {
@@ -59,16 +55,23 @@ if (process.env.NODE_ENV === 'development') {
     app.use(morgan('combined'));
 }
 
-// Routes
+// Log all /api requests
+app.use('/api', (req, res, next) => {
+    console.log(`Incoming API request: ${req.method} ${req.originalUrl}`);
+    next();
+});
+
+// Route imports
 const donationRoutes = require('./routes/donations');
 const paymentRoutes = require('./routes/payments');
 const ngoRoutes = require('./routes/ngos');
 
+// Route registrations
 app.use('/api/donations', donationRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/ngos', ngoRoutes);
 
-// Health Check
+// Health check
 app.get('/api/health', (req, res) => {
     res.json({
         status: 'OK',
@@ -78,7 +81,7 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// DB Test
+// Database test
 app.get('/api/test-db', async (req, res) => {
     try {
         const [rows] = await pool.execute('SELECT 1 as test, NOW() as timestamp');
@@ -88,7 +91,7 @@ app.get('/api/test-db', async (req, res) => {
     }
 });
 
-// API Docs
+// API index
 app.get('/api', (req, res) => {
     res.json({
         name: 'DonateMate API',
@@ -102,8 +105,7 @@ app.get('/api', (req, res) => {
     });
 });
 
-
-// ✅ Serve React frontend in production
+// Serve React frontend in production
 if (process.env.NODE_ENV === 'production') {
     const buildPath = path.join(__dirname, 'client/build');
     app.use(express.static(buildPath));
@@ -112,7 +114,6 @@ if (process.env.NODE_ENV === 'production') {
         res.sendFile(path.join(buildPath, 'index.html'));
     });
 } else {
-    // Dev mode landing
     app.get('/', (req, res) => {
         res.json({
             message: 'DonateMate API Server (development)',
@@ -122,7 +123,7 @@ if (process.env.NODE_ENV === 'production') {
     });
 }
 
-// 404 Handler for unknown API routes
+// Catch unknown API routes
 app.use('/api/*', (req, res) => {
     res.status(404).json({
         success: false,
@@ -136,7 +137,7 @@ app.use('/api/*', (req, res) => {
     });
 });
 
-// Global Error Handler
+// Global error handler
 app.use((err, req, res, next) => {
     console.error('Global error:', err.stack);
     res.status(500).json({
@@ -146,7 +147,7 @@ app.use((err, req, res, next) => {
     });
 });
 
-// Start Server
+// Start server
 const server = app.listen(PORT, () => {
     console.log(`DonateMate Server running on port ${PORT}`);
     console.log(`Environment: ${process.env.NODE_ENV}`);
