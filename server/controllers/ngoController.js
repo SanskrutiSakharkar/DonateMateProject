@@ -49,8 +49,11 @@ class NGOController {
 
     static async getNGOsByCategory(req, res) {
         try {
-            const { category } = req.params;
+            const category = req.params.category.toLowerCase(); // normalize case
             const ngos = await NGO.findByCategory(category);
+
+            console.log('Category:', category);
+            console.log('NGOs fetched:', ngos);
 
             res.status(200).json({
                 success: true,
@@ -70,7 +73,7 @@ class NGOController {
     static async getNGOStats(req, res) {
         try {
             const stats = await NGO.getStats();
-            
+
             res.status(200).json({
                 success: true,
                 data: stats

@@ -7,8 +7,8 @@ class NGO {
             let params = [];
             
             if (category && category !== 'all') {
-                query += ' AND category = ?';
-                params.push(category);
+                query += ' AND LOWER(category) = ?';
+                params.push(category.toLowerCase());
             }
             
             query += ' ORDER BY rating DESC, name ASC';
@@ -32,12 +32,26 @@ class NGO {
     static async findByCategory(category) {
         try {
             const [rows] = await pool.execute(
-                'SELECT * FROM ngo_partners WHERE category = ? AND verified = 1 ORDER BY rating DESC',
-                [category]
+                'SELECT * FROM ngo_partners WHERE LOWER(category) = ? AND verified = 1 ORDER BY rating DESC',
+                [category.toLowerCase()]
             );
             return rows;
         } catch (error) {
             throw new Error(`Failed to fetch NGOs by category: ${error.message}`);
+        }
+    }
+
+    static async getStats() {
+        try {
+            const [rows] = await pool.execute(`
+                SELECT category, COUNT(*) AS total_ngos, SUM(projects) AS total_projects 
+                FROM ngo_partners 
+                WHERE verified = 1 
+                GROUP BY category
+            `);
+            return rows;
+        } catch (error) {
+            throw new Error(`Failed to get NGO statistics: ${error.message}`);
         }
     }
 }
